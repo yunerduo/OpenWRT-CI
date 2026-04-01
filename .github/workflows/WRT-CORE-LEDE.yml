@@ -100,7 +100,13 @@ jobs:
           cd ./wrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
           # 提取内核版本号，用于缓存 Key
-          KVER=$(grep -m 1 -Po "LINUX_VERSION:=\K[0-9\.]+" include/kernel-version.mk || grep -m 1 -Po "KERNEL_PATCHVER:=\K[0-9\.]+" target/linux/rockchip/Makefile || echo "unknown")
+          KVER=$(grep -m 1 -Po "LINUX_VERSION:=\K.*" include/kernel-version.mk || echo "unknown")
+          if [[ "$KVER" == *"\$(LINUX_VERSION-"* ]]; then
+            VER_PATCH=$(echo "$KVER" | grep -Po "LINUX_VERSION-\K[0-9\.]+")
+            KVER=$(grep -m 1 -Po "LINUX_VERSION-$VER_PATCH:=\K.*" include/kernel-version.mk || echo "unknown")
+          fi
+          # 过滤非法字符
+          KVER=$(echo "$KVER" | sed 's/[^0-9.]//g')
           echo "WRT_KVER=$KVER" >> $GITHUB_ENV
 
           # GitHub Action 移除国内下载源
@@ -121,7 +127,6 @@ jobs:
           key: ${{env.WRT_CONFIG}}-${{env.WRT_INFO}}-${{env.WRT_KVER}}-${{env.WRT_HASH}}
           restore-keys: |
             ${{env.WRT_CONFIG}}-${{env.WRT_INFO}}-${{env.WRT_KVER}}
-            ${{env.WRT_CONFIG}}-${{env.WRT_INFO}}
           path: |
             ./wrt/.ccache
             ./wrt/staging_dir/host*
