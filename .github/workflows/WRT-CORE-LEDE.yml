@@ -100,7 +100,7 @@ jobs:
           cd ./wrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
           # 提取内核版本号，用于缓存 Key
-          KVER=$(grep -m 1 -Po "LINUX_VERSION:=\K.*" include/kernel-version.mk || grep -m 1 -Po "KERNEL_PATCHVER:=\K.*" target/linux/rockchip/Makefile || echo "unknown")
+          KVER=$(grep -m 1 -Po "LINUX_VERSION:=\K[0-9\.]+" include/kernel-version.mk || grep -m 1 -Po "KERNEL_PATCHVER:=\K[0-9\.]+" target/linux/rockchip/Makefile || echo "unknown")
           echo "WRT_KVER=$KVER" >> $GITHUB_ENV
 
           # GitHub Action 移除国内下载源
