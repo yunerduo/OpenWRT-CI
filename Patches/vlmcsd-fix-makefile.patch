@@ -1,0 +1,11 @@
+--- a/src/GNUmakefile
++++ b/src/GNUmakefile
+@@ -510,7 +510,7 @@ endif
+ # Compilation rules
+ 
+ define BUILD_RULE
+-../build/$(notdir $(basename $(1))).o: $(1)
++../build/%.o: %.c
+ 	$$(CC) $$(CFLAGS) -c -o $$@ $$<
+ endef
+ 
