@@ -158,7 +158,13 @@ jobs:
 
           $GITHUB_WORKSPACE/Scripts/Packages.sh
           $GITHUB_WORKSPACE/Scripts/Handles.sh
-
+      # 添加这一段 ↓
+      - name: Apply Patches
+        run: |
+          cd ./wrt/
+          
+          $GITHUB_WORKSPACE/Scripts/Patches.sh
+      # 添加完毕 ↑
       - name: Custom Settings
         run: |
           cd ./wrt/
