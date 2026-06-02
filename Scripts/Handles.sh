@@ -4,6 +4,16 @@
 
 PKG_PATH="$GITHUB_WORKSPACE/wrt/package/"
 
+#屏蔽vlmcsd编译失败
+VLMCSD_DIR=$(find ../feeds/packages/ -maxdepth 2 -type d -name "vlmcsd")
+if [ -d "$VLMCSD_DIR" ]; then
+	echo " "
+
+	rm -rf "$VLMCSD_DIR"
+
+	echo "vlmcsd has been disabled!"
+fi
+
 #预置HomeProxy数据
 if [ -d *"homeproxy"* ]; then
 	echo " "
